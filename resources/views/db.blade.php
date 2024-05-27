@@ -13,6 +13,7 @@
         <th>P/E</th>
         <th>R/EG</th>
         <th>P/S</th>
+        <th>IR</th>
     </tr>
     @foreach ($datas as $data)
     <tr>
