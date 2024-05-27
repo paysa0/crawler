@@ -4,7 +4,11 @@
         padding: 10px 10px;
         text-align: center;
     }
+    span{
+        position: fixed;
+    }
 </style>
+<span>last update: {{$datas->find(1)->updated_at}}</span>
 <table style="margin: auto;">
     <tr>
         <th>id</th>

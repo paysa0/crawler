@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Jobs\Request;
 use App\Models\Crl;
+use Carbon\Carbon;
 use Illuminate\Support\Facades\Http;
 use Illuminate\Http\Client\Pool;
 use Mockery\Undefined;
@@ -18,10 +19,6 @@ class CrlController extends Controller
     public $list = array();
 
     public function index() {
-        // $doc = Http::get('https://members.tsetmc.com/Loader.aspx?ParTree=151114');
-        // dd($doc->body());
-
-
         $names_urls = [
             'http://old.tsetmc.com/Loader.aspx?Partree=151317&Type=MostVisited&Flow=1',
             'http://old.tsetmc.com/Loader.aspx?Partree=151317&Type=MostVisited&Flow=2',
@@ -133,23 +130,45 @@ class CrlController extends Controller
     
 
     public static function dbsave($list) {
+        $utime = Carbon::now('iran')->format('Y-m-d H:i:s');
         foreach ($list as $name => $values) {
-            Crl::updateOrCreate([
-                'name' => $name,
-            ],
-            [
-                'name' => $name,
+            
+            $exit = Crl::where('name', '=', $name)
+            ->update(
+                [
                 'EPS' => $values['EPS'],
                 'PE' => $values['PE'],
                 'PEG' => $values['PEG'],
                 'PS' => $values['PS'],
                 'IR' => $values['IR'],
+                'updated_at' => $utime,
             ]);
+            if ($exit != 1) {
+                Crl::create([
+                    'name' => $name,
+                    'EPS' => $values['EPS'],
+                    'PE' => $values['PE'],
+                    'PEG' => $values['PEG'],
+                    'PS' => $values['PS'],
+                    'IR' => $values['IR'],
+                    'created_at' => $utime,
+                    'updated_at' => $utime,
+                ]);
+            }
         }
     }
 
-    public static function update() {
+    public static function show() {
         return view('db',['datas' => Crl::all()]);
+    }
+
+    public static function json() {
+        return response()->json(Crl::all());
+    }
+
+    public static function IR($ircode) {
+        // return view('db', ['datas' => Crl::where('IR' , '=', 'IRO'.$ircode)->get()]);
+        return Crl::where('IR' , '=', 'IRO'.$ircode)->get();
     }
 
 }

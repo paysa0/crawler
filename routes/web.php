@@ -2,6 +2,7 @@
 
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\CrlController;
+use App\Models\Crl;
 
 /*
 |--------------------------------------------------------------------------
@@ -15,4 +16,8 @@ use App\Http\Controllers\CrlController;
 */
 
 Route::get('/', [CrlController::class,'index']);
-Route::get('/api', [CrlController::class,'update']);
+Route::get('/api', [CrlController::class,'show']);
+
+Route::get('/json', function () {return response()->json(Crl::all());});
+
+Route::get('/api/{code}', [CrlController::class,'IR']);
