@@ -18,7 +18,7 @@ class Kernel extends ConsoleKernel
         $schedule->call(function () {
             $update = new CrlController;
             $update->index();
-        })->everyThreeMinutes();
+        })->day();
     }
 
     /**

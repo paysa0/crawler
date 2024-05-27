@@ -60,7 +60,6 @@ class Request implements ShouldQueue
                 $crl->ext($data1,1))
             );
 
-        
         $crl->dbsave($data);
         
     }

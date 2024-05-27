@@ -15,3 +15,4 @@ use App\Http\Controllers\CrlController;
 */
 
 Route::get('/', [CrlController::class,'index']);
+Route::get('/api', [CrlController::class,'update']);

@@ -18,6 +18,10 @@ class CrlController extends Controller
     public $list = array();
 
     public function index() {
+        // $doc = Http::get('https://members.tsetmc.com/Loader.aspx?ParTree=151114');
+        // dd($doc->body());
+
+
         $names_urls = [
             'http://old.tsetmc.com/Loader.aspx?Partree=151317&Type=MostVisited&Flow=1',
             'http://old.tsetmc.com/Loader.aspx?Partree=151317&Type=MostVisited&Flow=2',
@@ -25,6 +29,7 @@ class CrlController extends Controller
             ];
         $names = $this->names($names_urls);
         $this->chop($names);
+        echo 'done';
     }
 
 
@@ -51,8 +56,9 @@ class CrlController extends Controller
                 foreach ($res as $i => $r) {
                     $res[$i] = [
                         'EPS' => (int) $r->json('instrumentInfo')['eps']['estimatedEPS'], 
-                        'P/EG' => $r->json('instrumentInfo')['eps']['sectorPE'],
-                        'PSR' => (int) $r->json('instrumentInfo')['eps']['psr']];
+                        'PEG' => $r->json('instrumentInfo')['eps']['sectorPE'],
+                        'PSR' => (int) $r->json('instrumentInfo')['eps']['psr'],
+                        'IR' => $r->json('instrumentInfo')['instrumentID']];
                     }
                 return $res;
 
@@ -70,20 +76,20 @@ class CrlController extends Controller
         foreach ($merged as $name => $values) {
             if ($values['EPS'] == 0) {
                 $merged[$name] += [
-                    'P/E' => null 
+                    'PE' => null 
                 ];
             } else {
                 $merged[$name] += [
-                    'P/E' => round($values['PC'] / $values['EPS'], 2)  
+                    'PE' => round($values['PC'] / $values['EPS'], 2)  
                 ];
             }
             if ($values['PSR'] == 0) {
                 $merged[$name] += [
-                    'P/S' => 0
+                    'PS' => 0
                 ];
             } else {
                 $merged[$name] += [
-                    'P/S' => round($values['PC'] / $values['PSR'], 2)
+                    'PS' => round($values['PC'] / $values['PSR'], 2)
                 ];
             }
         }
@@ -134,11 +140,16 @@ class CrlController extends Controller
             [
                 'name' => $name,
                 'EPS' => $values['EPS'],
-                'P/E' => $values['P/E'],
-                'P/EG' => $values['P/EG'],
-                'P/S' => $values['P/S'],
+                'PE' => $values['PE'],
+                'PEG' => $values['PEG'],
+                'PS' => $values['PS'],
+                'IR' => $values['IR'],
             ]);
         }
+    }
+
+    public static function update() {
+        return view('db',['datas' => Crl::all()]);
     }
 
 }

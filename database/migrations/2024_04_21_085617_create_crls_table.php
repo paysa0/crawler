@@ -15,9 +15,10 @@ return new class extends Migration
             $table->id();
             $table->string('name');
             $table->string('EPS')->nullable();
-            $table->string('P/E')->nullable();
-            $table->string('P/EG')->nullable();
-            $table->string('P/S')->nullable();
+            $table->string('PE')->nullable();
+            $table->string('PEG')->nullable();
+            $table->string('PS')->nullable();
+            $table->string('IR')->nullable();
             $table->timestamp('created_at')->nullable();
             $table->timestamp('updated_at')->nullable();
         });
